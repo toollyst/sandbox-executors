@@ -1,0 +1,28 @@
+# push·PR마다: 스크립트(shellcheck, bash -n)와 워크플로(actionlint)를 본다. 무엇도 올리지 않는다.
+name: check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - run: |
+          for f in scripts/*.sh; do bash -n "$f"; done
+          shellcheck scripts/*.sh
+      - name: actionlint
+        run: |
+          set -euo pipefail
+          v=1.7.7
+          curl -fsSL -o actionlint.tgz "https://github.com/rhysd/actionlint/releases/download/v$v/actionlint_${v}_linux_amd64.tar.gz"
+          echo "023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757  actionlint.tgz" | sha256sum -c
+          tar xzf actionlint.tgz actionlint
+          ./actionlint -color
