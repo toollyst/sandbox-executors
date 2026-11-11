@@ -446,7 +446,7 @@ jobs:
             fi
           done
 
-          # 이 저장소는 schema 2만 낸다(sbx 0.1.x의 schema 1 색인은 toollyst/sandbox의 Pages에 남아 있다).
+          # 이 저장소는 schema 2만 낸다.
           [ ! -e "$repo/index.json" ] || { echo "::error::a schema 1 index.json appeared"; exit 1; }
           if [ ${#wick_files[@]} -eq 0 ] && [ ${#adapter_files[@]} -eq 0 ]; then
             echo "nothing new to publish" | tee -a "$GITHUB_STEP_SUMMARY"
